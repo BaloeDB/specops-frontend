@@ -1,4 +1,3 @@
-import HistoryLog from "../models/log/HistoryLog";
 import RecordResponse from "../models/record/RecordResponse";
 import api from "./api-client";
 
