@@ -9,7 +9,7 @@ import UserTest from "./components/test/UserTest.tsx";
 import TaskTest from "./components/test/TaskTest.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <HashRouter>
+  <HashRouter basename="/">
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/testing" element={<App />} />
