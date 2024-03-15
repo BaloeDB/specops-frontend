@@ -11,6 +11,7 @@ import TaskTest from "./components/test/TaskTest.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Routes>
+      <Route path="/" element={<TaskManager />} />
       <Route path="/testing" element={<App />} />
       <Route path="/tasks" element={<TaskManager />} />
       <Route path="/history" element={<HistoryManager />} />
