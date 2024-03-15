@@ -4,7 +4,7 @@ import TaskResponse from "../models/task/TaskResponse";
 const updateTask = async (dataType: string, id: string) => {
   try {
     const response = await axios.patch(
-      `https://specops-latest.onrender.com/${dataType}/setComplete/${id}`
+      `http://localhost:8080/${dataType}/setComplete/${id}`
     );
     const data: TaskResponse = response.data;
     return data;

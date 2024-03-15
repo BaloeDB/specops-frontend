@@ -9,6 +9,7 @@ import TaskLog from "../models/log/TaskLog";
 import StatusFilter from "../models/filter/StatusFilter";
 import TaskStatus from "../models/task/TaskStatus";
 import SearchFilter from "../models/filter/SearchFilter";
+import deactivateItem from "../services/deactivateItem";
 
 type ContextType = {
   getTasks: () => TaskResponse[];
@@ -18,6 +19,7 @@ type ContextType = {
   moveLeft: () => void;
   addTask: (task: TaskBody) => void;
   editTask: (id: string, task: TaskBody) => void;
+  deactivateTask: (id: string) => void;
   completeTask: (id: string) => void;
   search: (type: SearchFilter, querry: string) => void;
   filter: (status: StatusFilter) => void;
@@ -33,6 +35,7 @@ export const TaskContext = createContext<ContextType>({
   moveLeft: () => {},
   addTask: () => {},
   editTask: () => {},
+  deactivateTask: () => {},
   completeTask: () => {},
   search: () => {},
   filter: () => {},
@@ -40,7 +43,6 @@ export const TaskContext = createContext<ContextType>({
 
 export const TaskProvider: ProviderType = ({ children }) => {
   const [tasks, setTasks] = useState<TaskResponse[]>([]);
-  const [list, setList] = useState<TaskResponse[]>([]);
   const [size, setSize] = useState(0);
   const [pointer, setPointer] = useState(0);
   const [querry, setQuerry] = useState("");
@@ -53,7 +55,6 @@ export const TaskProvider: ProviderType = ({ children }) => {
     const getTaskList = async () => {
       const data = await getAllTasks();
       setTasks(data);
-      setList(data);
     };
     getTaskList();
   }, []);
@@ -73,7 +74,7 @@ export const TaskProvider: ProviderType = ({ children }) => {
 
   // Getters
   const getTasks = () => {
-    return apply(list).slice(pointer, pointer + size);
+    return apply(tasks).slice(pointer, pointer + size);
   };
 
   const getLogs = () => {
@@ -94,8 +95,10 @@ export const TaskProvider: ProviderType = ({ children }) => {
   // Setters
   const addTask = async (task: TaskBody) => {
     const data: TaskResponse = await postItem("tasks", task);
-    setList([...list, data]);
-    setTasks([...tasks, data]);
+    const newTasks = [...tasks, data].sort((task1, task2) =>
+      compareDates(task1, task2)
+    );
+    setTasks(newTasks);
   };
 
   const compareDates = (task1: TaskResponse, task2: TaskResponse) => {
@@ -110,7 +113,12 @@ export const TaskProvider: ProviderType = ({ children }) => {
     updatedTasks = updatedTasks.sort((task1, task2) =>
       compareDates(task1, task2)
     );
-    setList(updatedTasks);
+    setTasks(updatedTasks);
+  };
+
+  const deactivateTask = async (id: string) => {
+    await deactivateItem("tasks", id);
+    const updatedTasks = tasks.filter((task) => task.id !== id);
     setTasks(updatedTasks);
   };
 
@@ -119,7 +127,6 @@ export const TaskProvider: ProviderType = ({ children }) => {
     let newList = [...tasks.filter((task) => task.id !== id), newTask];
     newList = newList.sort((task1, task2) => compareDates(task1, task2));
     setTasks(newList);
-    setList(newList);
   };
 
   // Search & Filter
@@ -170,6 +177,7 @@ export const TaskProvider: ProviderType = ({ children }) => {
         moveLeft,
         addTask,
         editTask,
+        deactivateTask,
         completeTask,
         search,
         filter,
