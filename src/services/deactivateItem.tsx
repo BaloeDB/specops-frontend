@@ -1,10 +1,8 @@
-import axios from "axios";
+import { del } from "./api-client";
 
 const deactivateItem = async (dataType: string, id: string) => {
   try {
-    const response = await axios.delete(
-      `https://specops-latest.onrender.com/${dataType}/delete/${id}`
-    );
+    const response = await del(`${dataType}/delete/${id}`);
     return response.data;
   } catch (error) {
     console.error(error);

@@ -1,13 +1,10 @@
-import axios from "axios";
+import { post } from "./api-client";
 
 const postItem = async (dataType: string, body: object) => {
   try {
-    const response = await axios.post(
-      `https://specops-latest.onrender.com/${dataType}`,
-      {
-        ...body,
-      }
-    );
+    const response = await post(`${dataType}`, {
+      ...body,
+    });
     return response.data;
   } catch (error) {
     console.error(error);

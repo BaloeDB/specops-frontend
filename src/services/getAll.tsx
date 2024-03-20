@@ -1,10 +1,8 @@
-import axios from "axios";
+import { get } from "./api-client";
 
 const getAll = async (dataType: string) => {
   try {
-    const response = await axios.get(
-      `https://specops-latest.onrender.com/${dataType}`
-    );
+    const response = await get(`${dataType}`);
     return response.data;
   } catch (error) {
     console.error(error);
