@@ -6,7 +6,9 @@ import {
 import TaskBody from "../../models/task/TaskBody";
 import Modal from "../common/modal/Modal";
 import FieldCombination from "./fields/FieldCombination";
-import { DepartmentProvider } from "../../contexts/DepartmentContext";
+import {
+  DepartmentProvider,
+} from "../../contexts/DepartmentContext";
 import getAll from "../../services/getAll";
 
 const Content = (props: {
@@ -38,7 +40,6 @@ const Content = (props: {
       name="Create Task"
       edit={false}
       close={props.close}
-      deactivate={props.close}
       submit={() => {
         props.submit({
           name: taskName,

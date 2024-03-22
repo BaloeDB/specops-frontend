@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const api = "https://specops-latest.onrender.com";
+export const web = "https://specops-frontend.onrender.com";
 
 export const post = (resource: string, body: object) => {
   const headers = {
@@ -43,15 +44,21 @@ export const isManager = () =>
   sessionStorage.getItem("roles")?.includes("ROLE_MANAGER") || false;
 export const isAdmin = () =>
   sessionStorage.getItem("roles")?.includes("ROLE_ADMIN") || false;
+export const isLoggedIn = () => sessionStorage.getItem("loggedIn") !== null;
 
 export const connect = async (
   type: "login" | "signup",
   body: {
     username: string;
     password: string;
-  }
+  },
+  requestId?: string
 ) => {
-  const response = await axios.post(`${api}/users/${type}`, { ...body });
+  console.log(`${api}/users/${type}${requestId ? `/${requestId}` : ""}`);
+  const response = await axios.post(
+    `${api}/users/${type}${requestId ? `/${requestId}` : ""}`,
+    { ...body }
+  );
   const data: {
     username: string;
     token: string;
@@ -60,6 +67,7 @@ export const connect = async (
 
   sessionStorage.setItem("token", data.token);
   sessionStorage.setItem("roles", data.roles);
+  sessionStorage.setItem("loggedIn", "");
 
   return data;
 };

@@ -10,6 +10,8 @@ import StatusFilter from "../models/filter/StatusFilter";
 import TaskStatus from "../models/task/TaskStatus";
 import SearchFilter from "../models/filter/SearchFilter";
 import deactivateItem from "../services/deactivateItem";
+import getAll from "../services/getAll";
+import activateItem from "../services/activateItem";
 
 type ContextType = {
   getTasks: () => TaskResponse[];
@@ -17,6 +19,7 @@ type ContextType = {
   addTask: (task: TaskBody) => void;
   editTask: (id: string, task: TaskBody) => void;
   deactivateTask: (id: string) => void;
+  reactivateTask: (id: string) => void;
   completeTask: (id: string, notes: string) => void;
   search: (type: SearchFilter, querry: string) => void;
   filter: (status: StatusFilter) => void;
@@ -30,6 +33,7 @@ export const TaskContext = createContext<ContextType>({
   addTask: () => {},
   editTask: () => {},
   deactivateTask: () => {},
+  reactivateTask: () => {},
   completeTask: () => {},
   search: () => {},
   filter: () => {},
@@ -37,10 +41,11 @@ export const TaskContext = createContext<ContextType>({
 
 export const TaskProvider: ProviderType = ({ children }) => {
   const [tasks, setTasks] = useState<TaskResponse[]>([]);
-  const [querry, setQuerry] = useState("");
+  const [logs, setLogs] = useState<TaskLog[]>([]);
+  const [query, setQuery] = useState("");
   const [type, setType] = useState<"dept" | "name">("name");
   const [status, setStatus] = useState<
-    "all" | "pending" | "planned" | "overdue"
+    "all" | "pending" | "planned" | "overdue" | "inactive"
   >("all");
 
   useEffect(() => {
@@ -51,24 +56,21 @@ export const TaskProvider: ProviderType = ({ children }) => {
     getTaskList();
   }, []);
 
+  useEffect(() => {
+    const getTaskLogs = async () => {
+      const data = await getAll("tasks/list");
+      setLogs(data);
+    };
+    getTaskLogs();
+  }, []);
+
   // Getters
   const getTasks = () => {
-    return apply(tasks);
+    return apply(tasks) as TaskResponse[];
   };
 
   const getLogs = () => {
-    const logs: TaskLog[] = getTasks().map((task) => {
-      return {
-        id: task.id,
-        status: task.status,
-        name: task.name,
-        startdate: task.startDate,
-        deadline: task.deadline,
-        department: task.department,
-      };
-    });
-
-    return logs;
+    return apply(logs);
   };
 
   // Setters
@@ -96,9 +98,15 @@ export const TaskProvider: ProviderType = ({ children }) => {
   };
 
   const deactivateTask = async (id: string) => {
-    await deactivateItem("tasks", id);
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    setTasks(updatedTasks);
+    const data: TaskLog = await deactivateItem("tasks", id);
+    const updatedLogs = logs.map((log) => log.id === id ? data : log);
+    setLogs(updatedLogs);
+  };
+
+  const reactivateTask = async (id: string) => {
+    const data: TaskLog = await activateItem("tasks", id);
+    const updatedLogs = logs.map((log) => (log.id === id ? data : log));
+    setLogs(updatedLogs);
   };
 
   const completeTask = async (id: string, notes: string) => {
@@ -109,27 +117,27 @@ export const TaskProvider: ProviderType = ({ children }) => {
   };
 
   // Search & Filter
-  const apply = (list: TaskResponse[]) => {
+  const apply = (list: TaskResponse[] | TaskLog[]) => {
     return applyFilter(applySearch(list));
   };
 
-  const applySearch = (list: TaskResponse[]) => {
-    if (querry === "") {
+  const applySearch = (list: TaskResponse[] | TaskLog[]) => {
+    if (query === "") {
       return list;
     }
 
     if (type === "dept") {
       return list.filter((task) =>
-        task.department.toLowerCase().includes(querry.toLowerCase())
+        task.department.toLowerCase().includes(query.toLowerCase())
       );
     } else {
       return list.filter((task) =>
-        task.name.toLowerCase().includes(querry.toLowerCase())
+        task.name.toLowerCase().includes(query.toLowerCase())
       );
     }
   };
 
-  const applyFilter = (list: TaskResponse[]) => {
+  const applyFilter = (list: TaskResponse[] | TaskLog[]) => {
     if (status === "all") {
       return list;
     } else {
@@ -137,9 +145,9 @@ export const TaskProvider: ProviderType = ({ children }) => {
     }
   };
 
-  const search = (newType: SearchFilter, newQuerry: string) => {
+  const search = (newType: SearchFilter, newQuery: string) => {
     setType(newType as "dept" | "name");
-    setQuerry(newQuerry);
+    setQuery(newQuery);
   };
 
   const filter = (newStatus: StatusFilter) => {
@@ -154,6 +162,7 @@ export const TaskProvider: ProviderType = ({ children }) => {
         addTask,
         editTask,
         deactivateTask,
+        reactivateTask,
         completeTask,
         search,
         filter,
