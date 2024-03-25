@@ -1,6 +1,5 @@
 import { SecurityProvider } from "../../contexts/SecurityContext";
 import Layout from "../common/layout/Layout";
-import { useParams } from "react-router-dom";
 import SignupForm from "./SignupForm";
 
 const Content = (props: { type: "signup" | "login"; requestId?: string }) => {
