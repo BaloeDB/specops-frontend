@@ -5,6 +5,8 @@ import SignupForm from "./SignupForm";
 
 const Content = (props: { type: "signup" | "login" }) => {
   const { requestId } = useParams();
+  console.log(requestId);
+
   return (
     <>
       <Layout
