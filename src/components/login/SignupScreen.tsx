@@ -4,7 +4,9 @@ import { useParams } from "react-router-dom";
 import SignupForm from "./SignupForm";
 
 const Content = (props: { type: "signup" | "login" }) => {
+  const params = useParams();
   const { requestId } = useParams();
+  console.log(params);
   console.log(requestId);
 
   return (
