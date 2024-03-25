@@ -3,20 +3,15 @@ import Layout from "../common/layout/Layout";
 import { useParams } from "react-router-dom";
 import SignupForm from "./SignupForm";
 
-const Content = (props: { type: "signup" | "login" }) => {
-  const params = useParams();
-  const { requestId } = useParams();
-  console.log(params);
-  console.log(requestId);
-
+const Content = (props: { type: "signup" | "login"; requestId?: string }) => {
   return (
     <>
       <Layout
         header="LamaLab"
         content={
           <section className="flex justify-center">
-            {requestId ? (
-              <SignupForm type={props.type} requestId={requestId} />
+            {props.requestId ? (
+              <SignupForm type={props.type} requestId={props.requestId} />
             ) : (
               <SignupForm type={props.type} />
             )}
@@ -29,9 +24,11 @@ const Content = (props: { type: "signup" | "login" }) => {
 };
 
 const SignupScreen = (props: { type: "signup" | "login" }) => {
+  const { requestId } = useParams();
+
   return (
     <SecurityProvider>
-      <Content type={props.type} />
+      <Content type={props.type} requestId={requestId} />
     </SecurityProvider>
   );
 };
