@@ -23,12 +23,13 @@ const Content = (props: { type: "signup" | "login"; requestId?: string }) => {
   );
 };
 
-const SignupScreen = (props: { type: "signup" | "login" }) => {
-  const { requestId } = useParams();
-
+const SignupScreen = (props: {
+  type: "signup" | "login";
+  requestId?: string;
+}) => {
   return (
     <SecurityProvider>
-      <Content type={props.type} requestId={requestId} />
+      <Content type={props.type} requestId={props.requestId} />
     </SecurityProvider>
   );
 };

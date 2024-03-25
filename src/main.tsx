@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
 import App from "./App.tsx";
 import TaskManager from "./components/manage-tasks/TaskManager.tsx";
 import HistoryManager from "./components/manage-history/HistoryManager.tsx";
@@ -16,10 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<SignupScreen type="login" />} />
-      <Route
-        path="/signup/:requestId"
-        element={<SignupScreen type="signup" />}
-      />
+      <Route path="/signup/:requestId" element={<Signup />} />
       <Route path="/login" element={<SignupScreen type="login" />} />
       <Route element={<ProtectedRoute authenticate={isAdmin} />}>
         <Route path="/testing" element={<App />} />
