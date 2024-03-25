@@ -9,11 +9,7 @@ const Content = (props: { type: "signup" | "login"; requestId?: string }) => {
         header="LamaLab"
         content={
           <section className="flex justify-center">
-            {props.requestId ? (
-              <SignupForm type={props.type} requestId={props.requestId} />
-            ) : (
-              <SignupForm type={props.type} />
-            )}
+            <SignupForm type={props.type} requestId={props.requestId} />
           </section>
         }
         isLogin={true}
