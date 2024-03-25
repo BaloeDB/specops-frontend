@@ -1,7 +1,7 @@
-import RegisterForm from "./SignupForm";
 import { SecurityProvider } from "../../contexts/SecurityContext";
 import Layout from "../common/layout/Layout";
 import { useParams } from "react-router-dom";
+import SignupForm from "./SignupForm";
 
 const Content = (props: { type: "signup" | "login" }) => {
   const { requestId } = useParams();
@@ -12,9 +12,9 @@ const Content = (props: { type: "signup" | "login" }) => {
         content={
           <section className="flex justify-center">
             {requestId ? (
-              <RegisterForm type={props.type} requestId={requestId} />
+              <SignupForm type={props.type} requestId={requestId} />
             ) : (
-              <RegisterForm type={props.type} />
+              <SignupForm type={props.type} />
             )}
           </section>
         }
