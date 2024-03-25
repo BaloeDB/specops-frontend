@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.tsx";
 import TaskManager from "./components/manage-tasks/TaskManager.tsx";
 import HistoryManager from "./components/manage-history/HistoryManager.tsx";
@@ -11,6 +11,7 @@ import TaskTest from "./components/test/TaskTest.tsx";
 import ProtectedRoute from "./utils/ProtectedRoute.tsx";
 import { isAdmin, isUser } from "./services/api-client.ts";
 import OrganizationManager from "./components/manage-organization/OrganizationManager.tsx";
+import Signup from "./Signup.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
