@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
-import SignupScreen from "./components/login/SignupScreen";
+import RegisterScreen from "./components/login/RegisterScreen";
 
 const Signup = () => {
   const { requestId } = useParams();
 
   return (
     <>
-      <SignupScreen type="signup" requestId={requestId} />;
+      <RegisterScreen type="signup" requestId={requestId} />;
     </>
   );
 };
